@@ -1,25 +1,36 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GoldUi : MonoBehaviour
 {
+   [SerializeField]
    private TextMeshProUGUI coinText;
 
-   private void Start()
+  
+
+   void UpdateText()
    {
-      coinText = transform.GetChild(0).GetComponent<TextMeshProUGUI>();
-      UpdateText();
+      coinText.text = GameManager.Instance.playerGold.ToString();
+     coinText.ForceMeshUpdate();
+    
    }
 
-   void UpdateText() => coinText.text = GameManager.Instance.playerGold.ToString();
+   private void Update()
+   {
+      coinText.text = GameManager.Instance.playerGold.ToString();
+   }
 
    private void OnEnable()
    {
       GameManager.OnCollectableChanged += UpdateText;
-   }  private void OnDisable()
+   }
+
+   private void OnDisable()
    {
       GameManager.OnCollectableChanged -= UpdateText;
    }

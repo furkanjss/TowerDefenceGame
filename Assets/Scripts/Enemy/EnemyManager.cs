@@ -1,33 +1,43 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class EnemyManager : MonoBehaviour
 {
+    public int totalSpawnEnemy;
     public EnemyConfig[] enemyConfigs;
     [SerializeField] GameObject enemyPrefab;
     [SerializeField] Transform playerTower;
-    [SerializeField] float spawnInterval = 5f;
+   public float spawnInterval = 5f;
+   public const float minInterval = .6f;
     private float spawnTimer;
-    public float CurrentDifficulty { get; set; }
-    public float SpawnInterval { get; set; }
+    
     private float initialScale;
+    private GameManager _gameManager;
     private void Start()
     {
-        SpawnInterval = spawnInterval;
+      
         initialScale = transform.localScale.x;
+        _gameManager=GameManager.Instance;
     }
 
     private void Update()
     {
+        if(!_gameManager.IsGameStart)return;
         spawnTimer -= Time.deltaTime;
         if (spawnTimer <= 0)
         {
             SpawnEnemy();
             ScaleUpEffect();
-            spawnTimer = SpawnInterval;
-            SpawnInterval *= 0.99f; 
+            spawnTimer = spawnInterval;
+            if (spawnInterval>minInterval)
+            {
+                spawnInterval *= 0.99f; 
+
+            }
         }
     }
 
@@ -38,6 +48,14 @@ public class EnemyManager : MonoBehaviour
         enemy.Initialize(enemyConfig, playerTower); 
     }
 
+    private void OnEnable()
+    {
+        GameManager.OnGameDataLoad += GetSpawnInterval;
+    }
+ private void OnDisable()
+    {
+        GameManager.OnGameDataLoad -= GetSpawnInterval;
+    }
 
     void ScaleUpEffect()
     {
@@ -52,5 +70,9 @@ public class EnemyManager : MonoBehaviour
         return enemyConfigs[Random.Range(0, enemyConfigs.Length)];
     }
 
+    public void GetSpawnInterval()
+    {
+        spawnInterval = GameManager.Instance.loadedData.currentSpawnInterval;
+    }
    
 }

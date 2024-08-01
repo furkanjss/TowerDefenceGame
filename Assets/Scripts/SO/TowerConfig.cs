@@ -8,4 +8,5 @@ public class TowerConfig : ScriptableObject
     public float damage;
     public float fireRate;
     public GameObject towerPrefab;
+    public int priceIncrease = 5;
 }

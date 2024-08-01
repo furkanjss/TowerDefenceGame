@@ -1,0 +1,32 @@
+{
+  "project_info": {
+    "project_number": "222034585231",
+    "firebase_url": "https://highscoretd-default-rtdb.firebaseio.com",
+    "project_id": "highscoretd",
+    "storage_bucket": "highscoretd.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222034585231:ios:d02bd8b746a24cb654f2fa",
+        "android_client_info": {
+          "package_name": "com.company.highscore"
+        }
+      },
+      "api_key": [
+        {
+          "current_key": "AIzaSyCN2yFaDw2hRx1cIFrwO0p1EVV4nXMkdhE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 0
+        },
+        "appinvite_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -2,34 +2,28 @@ using System;
 using DG.Tweening;
 using UnityEngine;
 
-public abstract class EnemyBase : MonoBehaviour
+public abstract class EnemyBase : MonoBehaviour,IDamageable
 {
     protected EnemyConfig config;
     protected float currentHealth;
     protected float speed;
+    protected float power;
     protected Animator animator;
     protected Transform playerTower;
-    public bool die;
+    private bool isAlive = true;
     public void Initialize(EnemyConfig config,Transform target)
     {
         this.config = config;
         this.currentHealth = config.health;
         this.speed = config.speed;
         this.playerTower = target;
+        this.power = config.power;
         GetAnimator();
     }
 
+    public bool IsEnemyAlive() => isAlive;
 
-    private void Update()
-    {
-        if (die)
-        {
-            die = false;
-            Die();
-        }
-    }
-
-    protected abstract void MoveToTower(Transform playerTower);
+    protected abstract void MoveToTower(Transform playerTower,MainTowerManager mainTowerManager);
 
 
     void GetAnimator()
@@ -45,10 +39,22 @@ public abstract class EnemyBase : MonoBehaviour
         currentHealth -= amount;
         if (currentHealth <= 0)
         {
+            isAlive = false;
             Die();
+        }
+        else
+        {
+            ScaleUpEffect();
         }
     }
 
+    void ScaleUpEffect()
+    {
+        transform.DOScale(1.5f,.1f).OnComplete(() =>
+        {
+            transform.DOScale(1, .1f);
+        });
+    }
     protected virtual void Die()
     {
         
@@ -57,7 +63,7 @@ public abstract class EnemyBase : MonoBehaviour
             animator.SetTrigger("Die");
         }
 
-        GameManager.Instance.CollectGold(config.rewardGold);
+        GameManager.Instance.CollectGoldAndScore(config.rewardGold,config.rewardScore);
 
         transform.DOScale(Vector3.zero, 1f)
             .SetDelay(2)
